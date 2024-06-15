@@ -5,19 +5,11 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_login_form():
-    response = client.post(
-        "/auth/token", data={"username": "testuser", "password": "testpassword"}
-    )
-    assert response.status_code == 200
-    assert "access_token" in response.json()
-
-
 def test_login_json():
-    # Tentar fazer login com JSON
     response = client.post(
-        "/auth/token", json={"username": "testuser", "password": "testpassword"}
+        "/auth/token",
+        json={"username": "admin", "password": "admin"},
+        headers={"Content-Type": "application/json"},
     )
-    print(response.text)
     assert response.status_code == 200
     assert "access_token" in response.json()

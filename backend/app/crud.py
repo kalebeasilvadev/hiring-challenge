@@ -5,7 +5,7 @@ from app.utils import get_password_hash
 
 
 def create_file_upload(db: Session, file_upload: schemas.FileUploadCreate):
-    db_file_upload = models.FileUpload(**file_upload.dict())
+    db_file_upload = models.FileUpload(**file_upload.model_dump())
     db.add(db_file_upload)
     db.commit()
     db.refresh(db_file_upload)

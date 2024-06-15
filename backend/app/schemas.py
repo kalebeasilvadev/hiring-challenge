@@ -18,7 +18,7 @@ class FileUploadCreate(FileUploadBase):
 class FileUpload(FileUploadBase):
     id: int
     upload_time: datetime = datetime.now()
-
+    history_id: int
     model_config = ConfigDict(from_attributes=True)
 
 

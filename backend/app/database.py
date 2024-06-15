@@ -1,11 +1,15 @@
 import logging
 import os
 import time
-from dotenv import load_dotenv
 
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 from sqlalchemy_utils import create_database, database_exists
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 logging_levels = {
     "debug": logging.DEBUG,
@@ -15,9 +19,7 @@ logging_levels = {
     "critical": logging.CRITICAL,
 }
 
-load_dotenv()
-
-modo = os.getenv("MODO", "info")
+modo = os.getenv("MODO", "info").lower()
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")

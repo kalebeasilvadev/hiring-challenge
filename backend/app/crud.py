@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from app import models, schemas
 from app.utils import get_password_hash
 
@@ -34,3 +35,11 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_processing_history(db: Session, id: int):
+    return (
+        db.query(models.ProcessingHistory)
+        .filter(models.ProcessingHistory.id == id)
+        .first()
+    )

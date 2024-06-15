@@ -1,2 +1,2 @@
-# kanastra-challenge
+# hiring-challenge
  

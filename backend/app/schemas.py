@@ -11,6 +11,7 @@ class FileUploadBase(BaseModel):
 
 
 class FileUploadCreate(FileUploadBase):
+    history_id: int
     pass
 
 
@@ -18,9 +19,7 @@ class FileUpload(FileUploadBase):
     id: int
     upload_time: datetime = datetime.now()
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Token(BaseModel):
@@ -45,10 +44,16 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserInDB(User):
     hashed_password: str
+
+
+class ProcessingHistoryBase(BaseModel):
+    id: int
+    status: str
+    success_count: int
+    failure_count: int
+    size: int

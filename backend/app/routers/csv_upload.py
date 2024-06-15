@@ -1,18 +1,24 @@
-from fastapi import APIRouter, UploadFile, File, Depends
-from sqlalchemy.orm import Session
-from .. import schemas, crud
-from ..database import get_db
-import pandas as pd
-import os
 import tempfile
-from datetime import datetime
+import threading
+
+import pandas as pd
+from fastapi import APIRouter, BackgroundTasks, Depends, File, UploadFile
+from sqlalchemy.orm import Session
+
+from app import crud, schemas
+from app.database import get_db
+from app.models import ProcessingHistory
+from app.services.processing_csv import process_csv
 
 router = APIRouter()
 
 
-@router.post("/uploadfile/", response_model=schemas.FileUpload)
-async def create_upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    dt_inicio = datetime.now()
+@router.post("/uploadfile/")
+async def create_upload_file(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
     content = await file.read()
 
     # Cria um arquivo temporário
@@ -22,15 +28,25 @@ async def create_upload_file(file: UploadFile = File(...), db: Session = Depends
 
     # Agora podemos ler o arquivo com pandas
     df = pd.read_csv(temp_file.name)
-    print(f"tempo de execução: {datetime.now() - dt_inicio}")
+
+    # Criar entrada no histórico com status "pendente"
+    history_entry = ProcessingHistory(status="pendente", size=len(df))
+    db.add(history_entry)
+    db.commit()
+    db.refresh(history_entry)
+
+    # Adicionar tarefa em background para processar o CSV
+    background_tasks.add_task(
+        threading.Thread(
+            target=process_csv, args=(temp_file.name, db, history_entry.id)
+        ).start
+    )
 
     file_upload = schemas.FileUploadCreate(
         filename=file.filename,
         size=len(content),
-        rows=len(df)
+        rows=len(df),
+        history_id=history_entry.id,
     )
-
-    # Remove o arquivo temporário
-    os.unlink(temp_file.name)
 
     return crud.create_file_upload(db=db, file_upload=file_upload)

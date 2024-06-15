@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="kanastra" uuid="da0358f2-256d-44d9-85a7-55a89bc8057c">
+    <data-source source="LOCAL" name="hiring" uuid="b88fcfc2-576e-4b90-b0b4-a920e96491ec">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\DEV\Kanastra-challenge\backend\kanastra.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\DEV\hiring-challenge\backend\hiring.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

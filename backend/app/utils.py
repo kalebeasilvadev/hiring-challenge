@@ -2,7 +2,6 @@ import os
 from datetime import datetime, timedelta
 
 import jwt
-from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -12,7 +11,6 @@ from app import crud, database, schemas
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
-load_dotenv()
 
 # to get a string like this run: openssl rand -hex 32
 SECRET_KEY = os.getenv("SECRET_KEY")

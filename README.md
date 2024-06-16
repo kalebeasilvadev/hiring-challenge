@@ -63,6 +63,9 @@ Estas variáveis configuram a URL do banco de dados, a chave secreta para geraç
 
 4. Instale as dependências do projeto:
    ```sh
+   python -m venv venv
+   source venv/bin/activate # Linux
+   venv\Scripts\activate # Windows  
    pip install -r requirements.txt
    ```
 

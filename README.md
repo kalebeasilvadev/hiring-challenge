@@ -89,6 +89,7 @@ Estas variáveis configuram a URL do banco de dados, a chave secreta para geraç
 
 
 A aplicação estará disponível em `http://127.0.0.1:8000`.
+usuario padrão: admin senha: admin
 
 ### Funcionalidades
 

@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (username: string, password: string) => void;
   logout: () => void;
   token?: string;
+  backendUrl?: string;
 }
 
 interface AuthProviderProps {
@@ -15,13 +16,14 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState('');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
   const login = (username: string, password: string) => {
-    axios.post('http://localhost:8050/auth/token', {username, password})
+    axios.post(`${backendUrl}/auth/token`, {username, password})
       .then((response) => {
         setToken(`${response.data.token_type} ${response.data.access_token}`);
         setIsAuthenticated(true);
@@ -36,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   };
 
   return (
-    <AuthContext.Provider value={{isAuthenticated, login, logout, token}}>
+    <AuthContext.Provider value={{isAuthenticated, login, logout, token, backendUrl}}>
       {children}
     </AuthContext.Provider>
   );

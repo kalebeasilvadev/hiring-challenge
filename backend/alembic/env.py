@@ -10,14 +10,15 @@ from app.models import Base
 load_dotenv()
 
 config = context.config
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 fileConfig(config.config_file_name)
 target_metadata = Base.metadata
 
 
 def run_migrations_offline():
-    url_str = os.getenv("DATABASE_URL")
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url_str,
+        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
     )

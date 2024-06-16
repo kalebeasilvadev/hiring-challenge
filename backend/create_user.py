@@ -1,12 +1,14 @@
 import argparse
 
-from app.crud import create_user as crud_create_user
+from app.crud import create_user as crud_create_user, get_user_by_username
 from app.database import SessionLocal
 from app.schemas import UserCreate
 
 
 def create_user(username: str, email: str, password: str):
     db = SessionLocal()
+    if get_user_by_username(db, username):
+        return False
     user_create = UserCreate(username=username, email=email, password=password)
     db_user = crud_create_user(db, user_create)
     db.close()
@@ -22,4 +24,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     user = create_user(args.username, args.email, args.password)
-    print(f"User {user.username} created successfully")
+    if not user:
+        print(f"User {args.username} already exists")
+    else:
+        print(f"User {user.username} created successfully")

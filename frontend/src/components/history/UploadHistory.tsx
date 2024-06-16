@@ -7,13 +7,13 @@ const UploadHistory = () => {
   const [history, setHistory] = useState<any[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {token} = useAuth();
+  const {token, backendUrl} = useAuth();
 
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get('http://localhost:8050/history/uploads',
+        const response = await axios.get(`${backendUrl}/history/uploads`,
           {headers: {Authorization: token}});
         setHistory(response.data);
       } catch (error) {
@@ -31,7 +31,7 @@ const UploadHistory = () => {
 
   const handleItemClick = async (id: number) => {
     try {
-      const response = await axios.get(`http://localhost:8050/history/processing?id=${id}`,
+      const response = await axios.get(`http://backend:8050/history/processing?id=${id}`,
         {headers: {Authorization: token}});
       setSelectedHistory(response.data);
       setIsModalOpen(true);

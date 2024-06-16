@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  sqlite:
+    image: nouchka/sqlite3
+    environment:
+      - SQLITE_DATABASE=/db/sql_app.db
+    volumes:
+      - ./backend/db:/db
+
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=sqlite:///db/sql_app.db
+      - SECRET_KEY=s3nh@_ultr4_s3cr3t@
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - MODO=info
+      - CSV_CHUNKSIZE=100000
+    env_file:
+      - .env
+    depends_on:
+      - sqlite
+    volumes:
+      - ./backend/db:/db
+      - ./.env:/app/.env
+    ports:
+      - "8050:8050"
+    command: ["sh", "-c", "alembic upgrade head && python create_user.py --username admin --password admin --email admin@admin && python main.py"]
+
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8050
+    ports:
+      - "3000:3000"

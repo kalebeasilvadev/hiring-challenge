@@ -6,7 +6,7 @@ import Modal from "@/components/modal/Modal.tsx";
 const UploadCSV = () => {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState('');
-  const {token} = useAuth();
+  const {token, backendUrl} = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +27,7 @@ const UploadCSV = () => {
     formData.append('file', file);
 
     try {
-      await axios.post('http://localhost:8050/csv/uploadfile', formData,
+      await axios.post(`${backendUrl}/csv/uploadfile`, formData,
         {headers: {'Content-Type': 'multipart/form-data', Authorization: token}});
       setMessage(`Arquivo enviado com sucesso.`);
       setIsModalOpen(true);
